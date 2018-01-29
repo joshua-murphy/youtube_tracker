@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'api/auth'
   namespace :api do
-    resources :channels
-    get '/subscriptions', to: 'subscriptions#index'
+    resources :channels, only: [:index, :show, :create, :destroy]
+    resources :subscriptions, only: [:index, :create, :destroy]
   end
 
   #Do not place any routes below this one
