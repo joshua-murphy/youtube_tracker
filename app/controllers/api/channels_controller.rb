@@ -13,7 +13,7 @@ class Api::ChannelsController < ApplicationController
 
   def create
     channel = current_user.channels.new(channel_params)
-    render json: ( channel.save ? channel : { channel.errors.full_messages.join(',') }, status: 422 )
+    channel.save ? ( render json: channel ) : ( render json: { errors: channel.errors.full_messages.join(',')}, status: 422 )
   end
 
   def destroy
