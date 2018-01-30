@@ -12,7 +12,7 @@ class Api::SubscriptionsController < ApplicationController
   end
 
   def destroy
-    Subscription.find(params[:id]).destroy
+    current_user.subscriptions.find(params[:id]).destroy
   end
 
   private
