@@ -6,7 +6,7 @@ import { Button, Form, Grid, Header, Segment, Select } from 'semantic-ui-react';
 
 class SubModal extends React.Component {
 
-  state = { channelOptions: [] };
+  state = { channelOptions: [], search: '' };
 
   componentDidMount() {
     axios.get('/api/channels')
@@ -21,7 +21,7 @@ class SubModal extends React.Component {
 
   handleSubmit = (e) => {
     const { dispatch, toggleModal, user } = this.props;
-    const { channelOptions, channel } = this.state;
+    const { channel } = this.state;
     let subscription = null
     e.preventDefault();
     subscription = { user_id: user.id, channel_id: channel }
@@ -35,7 +35,7 @@ class SubModal extends React.Component {
 
   render() {
     return(
-      <Grid width={16}>
+      <Grid>
         <Grid.Column style={{ maxWidth: 1200, paddingTop: 15 }}>
           <Segment>
             <Header textAlign="center">New Subscription</Header>
@@ -47,9 +47,10 @@ class SubModal extends React.Component {
                 placeholder='Select a Channel'
                 onChange={this.handleChange}
                 id='channel'
+                  width={16}
                 required
               />
-              <Button primary>Save</Button>
+              <Button primary content="Add" onSubmit={this.handleSubmit}/>
             </Form>
           </Segment>
         </Grid.Column>
