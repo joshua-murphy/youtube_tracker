@@ -1,23 +1,45 @@
 import React, { Component } from 'react';
-import axios from 'axios'
-import { Header } from 'semantic-ui-react';
+import AddSub from './AddSub';
+import Subscription from './Subscription';
+import { getSubs, clearSubs } from '../actions/subscriptions';
+import { connect } from 'react-redux'
+import { Container, Dimmer, Header, Loader } from 'semantic-ui-react';
 
 class Home extends Component {
 
-  state = { channels: [], subs: [] }
-
   componentDidMount(){
-    axios.get('/api/channels')
-      .then( res => this.setState({ channels: res.data }))
-    axios.get('/api/subscriptions')
-      .then( res => this.setState({ subs: res.data }))
+    const { dispatch, user } = this.props
+    dispatch(getSubs(user.id))
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(clearSubs())
   }
 
   render() {
-    return (
-      <Header as='h1' textAlign='center'>Subscriptions</Header>
-    );
+    const { subs } = this.props
+    if( subs.length )
+      return (
+        <Container>
+          <Header as='h1' textAlign='center'>Subscriptions</Header>
+          <hr/><AddSub /><hr/>
+          { subs.map( sub => <Subscription key={sub.id} sub={sub} /> ) }
+        </Container>
+      );
+    else
+      return (
+        <Dimmer active inverted>
+          <Loader>Loading subscriptions...</Loader>
+        </Dimmer>
+      )
   }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+    subs: state.subscriptions,
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Home);
