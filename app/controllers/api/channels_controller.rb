@@ -1,10 +1,9 @@
 class Api::ChannelsController < ApplicationController
   
-  before_action :authenticate_user!
   before_action :set_channel, only: [:show, :destroy]
 
   def index
-    render json: current_user.channels.all
+    render json: Channel.all
   end
 
   def show
@@ -12,7 +11,7 @@ class Api::ChannelsController < ApplicationController
   end
 
   def create
-    channel = current_user.channels.new(channel_params)
+    channel = Channel.new(channel_params)
     channel.save ? ( render json: channel ) : ( render json: { errors: channel.errors.full_messages.join(',')}, status: 422 )
   end
 
@@ -27,7 +26,7 @@ class Api::ChannelsController < ApplicationController
     end
 
     def set_channel
-      @channel = current_user.channels.find(params[:id])
+      @channel = Channel.find(params[:id])
     end
 
 end

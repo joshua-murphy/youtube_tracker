@@ -7,7 +7,7 @@ class Api::SubscriptionsController < ApplicationController
   end
 
   def create
-    sub = current_user.subscription.new(sub_params)
+    sub = current_user.subscriptions.new(sub_params)
     sub.save ? ( render json: sub ) : ( render json: { errors: sub.errors.full_messages.join(',')}, status: 422 )
   end
 
