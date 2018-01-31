@@ -3,7 +3,7 @@ class Api::ChannelsController < ApplicationController
   before_action :set_channel, only: [:show, :destroy]
 
   def index
-    render json: Channel.all
+    render json: Channel.order(created_at: :DESC)
   end
 
   def show

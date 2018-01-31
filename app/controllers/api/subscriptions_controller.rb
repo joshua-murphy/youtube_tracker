@@ -3,7 +3,7 @@ class Api::SubscriptionsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    render json: current_user.subscriptions.all
+    render json: current_user.subscriptions.all.order(created_at: :desc)
   end
 
   def create
