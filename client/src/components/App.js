@@ -13,7 +13,7 @@ import { Switch, Route } from 'react-router-dom';
 class App extends Component {
   render() {
     return (
-      <div>
+      <div style={{height: "100vh", backgroundColor: "#dbdbdb"}}>
         <NavBar />
         <Flash />
         <FetchUser>
