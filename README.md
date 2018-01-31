@@ -1,24 +1,14 @@
-# README
+# YouTube Tracker
+> Choose YouTube channels to see their stats and latest video
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Get Started:
 
-Things you may want to cover:
+* ```git clone``` and ```cd``` into the project 
 
-* Ruby version
+* ```bundle && rails db:create db:migrate```
 
-* System dependencies
+* ```cd client && yarn```
 
-* Configuration
+* From root directory, ```rails s -p 3001```
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* From /client directory, ```yarn start```
