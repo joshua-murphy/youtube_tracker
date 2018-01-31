@@ -7,7 +7,7 @@ import { Grid, Header, Icon, Image, Segment } from 'semantic-ui-react';
 
 class Subscriptions extends React.Component {
 
-  state = { subscription: {}, stats: {}, video: {}, videos: [], loading: true }
+  state = { subscription: {}, stats: {}, video: { stats: {} }, videos: [], loading: true }
 
   componentDidMount() {
     axios.get(`api/channels/${this.props.sub.channel_id}`)
@@ -52,7 +52,7 @@ class Subscriptions extends React.Component {
       dispatch(deleteSub(sub))
   }
 
-  fixNumbers = (num = 0) => {
+  fixNumber = (num = 0) => {
     return parseInt(num, 10).toLocaleString()
   }
 
@@ -67,15 +67,19 @@ class Subscriptions extends React.Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <Header content={subscription.title} />
-              <p>Subscribers: {this.fixNumbers(stats.subscriberCount) || "0"}</p>
-              <p>Total Views: {this.fixNumbers(stats.viewCount) || "0"}</p>
+              <i>Subscribers: {this.fixNumber(stats.subscriberCount) || "0"}</i><br/>
+              <i>Views: {this.fixNumber(stats.viewCount) || "0"}</i>
             </Grid.Column>
             <Grid.Column width={2}>
-              <Image style={{ height: -10 }} src={video.thumbnail} />
+              <Image src={video.thumbnail} />
             </Grid.Column>
             <Grid.Column width={7}>
-              <Header content="Latest Video" />
-              <p>{ video.title || "No Video Found" }</p>
+              <Header as="h4" content={ video.title || "No Video Found" } />
+              <i>
+                Views: { this.fixNumber(video.stats.viewCount) || 0 } | 
+                Likes: {this.fixNumber(video.stats.likeCount) || 0} | 
+                Dislikes: {this.fixNumber(video.stats.dislikeCount) || 0}
+              </i>
             </Grid.Column>
             <Grid.Column width={1}>
               <Icon link name="delete" style={{float: 'right'}} onClick={this.deleteSub} />
