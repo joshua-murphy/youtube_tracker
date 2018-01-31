@@ -3,7 +3,7 @@ import { APIKey } from './APIKey';
 import { connect } from 'react-redux'
 import { addChannel } from '../actions/channels';
 import axios from 'axios';
-import { Button, Card, Dimmer, Form, Grid, Image, Label, Loader } from 'semantic-ui-react';
+import { Button, Card, Dimmer, Form, Grid, Image, Loader } from 'semantic-ui-react';
 
 class ChannelSearch extends React.Component {
 
@@ -16,10 +16,6 @@ class ChannelSearch extends React.Component {
       .then( res => {
         this.adaptResponse(res.data.items[0])
       })
-  }
-
-  addChannel = (e) => {
-    this.props.dispatch(addChannel(this.state.channel))
   }
 
   adaptResponse = (data) => {
@@ -39,28 +35,37 @@ class ChannelSearch extends React.Component {
   }
 
   render() {
-    const { channel, description, loaded } = this.state
+    const { channel, description, searchType, loaded } = this.state
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column width={8}>
             <Form onSubmit={this.handleSearch}>
-              <Label basic color='grey' 
-                content='Search for channel by username ( youtube.com/user/<username> )' 
-              />
+              <Form.Group inline>
+                <Form.Radio 
+                  label='Search by username' 
+                  checked={searchType === 'forUsername'} 
+                  onClick={() => this.setState({searchType: 'forUsername'})} 
+                />
+                <Form.Radio 
+                  label='Search by channel id' 
+                  checked={searchType === 'id'} 
+                  onClick={() => this.setState({searchType: 'id'})} 
+                />
+              </Form.Group> 
               <Form.Group>
-              <Form.Input
-                placeholder='Search'
-                onChange={this.handleChange}
-                id='search'
-                width={14}
-              />
-              <Form.Button
-                basic
-                icon='search'
-                onClick={this.handleSearch}
-                width={2}
-              />
+                <Form.Input
+                  placeholder='Search'
+                  onChange={this.handleChange}
+                  id='search'
+                  width={14}
+                />
+                <Form.Button
+                  basic
+                  icon='search'
+                  onClick={this.handleSearch}
+                  width={2}
+                />
               </Form.Group>
             </Form>
           </Grid.Column>
@@ -78,7 +83,7 @@ class ChannelSearch extends React.Component {
                     </Grid.Column>
                   </Card.Content>
                   <Card.Content extra>
-                    <Button floated="right" primary content="Add to List" onClick={this.addChannel} />
+                    <Button floated="right" primary content="Add to List" onClick={() => this.props.dispatch(addChannel(this.state.channel))} />
                   </Card.Content>
                 </Card>
               :
