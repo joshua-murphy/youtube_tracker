@@ -16,18 +16,18 @@ export const registerUser = (email, password, passwordConfirmation, history) => 
     axios.post('/api/auth', { email, password, password_confirmation: passwordConfirmation })
       .then(res => {
         const { data: { data: user }, headers } = res;
+        dispatch(setHeaders(headers));
         dispatch(login(user));
-        dispatch(setHeaders(headers));
         history.push('/');
-      })
-      .catch(res => {
+      }).catch(res => {
+        const errors = res.response.data.errors ? res.response.data.errors : { full_messages: ['Something went wrong'] }
         const messages =
-          res.response.data.errors.full_messages.map(message =>
-            <div>{message}</div>);
+          errors.full_messages.map((message,i) =>
+            <div key={i}>{message}</div>);
         const { headers } = res;
-        dispatch(setHeaders(headers));
         dispatch(setFlash(messages, 'red'));
-      });
+        dispatch(setHeaders(headers));
+    });
   };
 };
 
@@ -61,16 +61,16 @@ export const handleLogin = (email, password, history) => {
         dispatch(login(user));
         history.push('/');
       })
-      .catch(res => {
-        let errors = res.response.data.errors ? res.response.data.errors : { full_messages: ['Something went wrong'] }
+      .catch(err => {
+        let errors = err.response.data.errors ? err.response.data.errors : { full_messages: ['Something went wrong'] }
         if (Array.isArray(errors))
           errors = { full_messages: errors }
         const messages =
-          errors.map(message =>
-            <div>{message}</div>);
-        const { headers } = res;
-        dispatch(setHeaders(headers));
+          errors.full_messages.map((message,i) =>
+            <div key={i}>{message}</div>);
+        const { headers } = err;
         dispatch(setFlash(messages, 'red'));
+        dispatch(setHeaders(headers));
       });
   };
 };
