@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import user from './user';
 import flash from './flash';
 import channels from './channels';
-import subscriptions from './subscriptions';
+import videos from './videos';
 
 const rootReducer = combineReducers({
   user,
   flash,
   channels,
-  subscriptions,
+  videos,
 });
 
 export default rootReducer;

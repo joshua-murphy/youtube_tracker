@@ -19,8 +19,10 @@ ActiveRecord::Schema.define(version: 20180129202643) do
     t.string "title", null: false
     t.string "yt_channel_id", null: false
     t.string "profile_image", default: ""
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_channels_on_user_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -61,6 +63,7 @@ ActiveRecord::Schema.define(version: 20180129202643) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "channels", "users"
   add_foreign_key "subscriptions", "channels"
   add_foreign_key "subscriptions", "users"
 end

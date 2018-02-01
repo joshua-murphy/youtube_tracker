@@ -3,14 +3,14 @@ import { APIKey } from './APIKey';
 import { connect } from 'react-redux'
 import { addChannel } from '../actions/channels';
 import axios from 'axios';
-import { Button, Card, Dimmer, Form, Grid, Image, Loader } from 'semantic-ui-react';
+import { Button, Card, Dimmer, Form, Grid, Header, Image, Loader, Segment } from 'semantic-ui-react';
 
 class ChannelSearch extends React.Component {
 
   state = { channel: {}, description: '', search: '', searchType: 'forUsername', loaded: true }
 
   handleSearch = () => {
-    this.setState({ channel: {}, description: '', loaded: false })
+    this.setState({ channel: {}, description: '', search: '', loaded: false })
     const { searchType } = this.state
     axios.get(`https://www.googleapis.com/youtube/v3/channels?part=snippet&${searchType}=${this.state.search}&key=${APIKey}&fields=items(id,snippet(title,description,thumbnails/default))`)
       .then( res => {
@@ -23,7 +23,8 @@ class ChannelSearch extends React.Component {
       const yt_channel_id = data.id
       const { title, description } = data.snippet
       const profile_image = data.snippet.thumbnails.default.url
-      const channel = { yt_channel_id, title, profile_image }
+      const user_id = this.props.user.id
+      const channel = { yt_channel_id, title, profile_image, user_id }
       this.setState({ channel, description, loaded: true })
     } else {
       this.setState({ error: true, loaded: true })
@@ -35,13 +36,14 @@ class ChannelSearch extends React.Component {
   }
 
   render() {
-    const { channel, description, searchType, loaded } = this.state
+    const { channel, description, search, searchType, loaded } = this.state
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column width={8}>
-            <Form onSubmit={this.handleSearch}>
-              <Form.Group inline>
+            <Form as={Segment} onSubmit={this.handleSearch}>
+              <Header textAlign="center" content="Search for a channel" />
+              <Form.Group grouped>
                 <Form.Radio 
                   label='Search by username' 
                   checked={searchType === 'forUsername'} 
@@ -56,6 +58,7 @@ class ChannelSearch extends React.Component {
               <Form.Group>
                 <Form.Input
                   placeholder='Search'
+                  value={search}
                   onChange={this.handleChange}
                   id='search'
                   width={14}
@@ -71,7 +74,7 @@ class ChannelSearch extends React.Component {
           </Grid.Column>
           <Grid.Column width={8}>
             { loaded ?
-              channel.title ? 
+              channel.title &&
                 <Card fluid>
                   <Card.Content>
                     <Grid.Column width={6}>
@@ -86,10 +89,10 @@ class ChannelSearch extends React.Component {
                     <Button floated="right" primary content="Add to List" onClick={() => this.props.dispatch(addChannel(this.state.channel))} />
                   </Card.Content>
                 </Card>
-              :
-                null
             : 
-              <Dimmer active inverted><Loader>Loading channel...</Loader></Dimmer> 
+              <Dimmer active inverted>
+                <Loader>Loading channel...</Loader>
+              </Dimmer> 
             }
           </Grid.Column>
         </Grid.Row>

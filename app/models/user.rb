@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
           :omniauthable
   include DeviseTokenAuth::Concerns::User
 
-  has_many :subscriptions
-  has_many :channels, through: :subscriptions
+  has_many :channels
 
 end

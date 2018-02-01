@@ -8,7 +8,7 @@ export const getChannels = (userId) => {
       .catch( err => {
         dispatch({ type: 'SET_HEADERS', headers: err.headers });
         dispatch(setFlash('Failed to Retrieve Channels', 'red'));
-    });
+      });
   }
 }
 
@@ -21,11 +21,10 @@ export const addChannel = (channel) => {
     axios.post(`/api/channels`, channel )
       .then( res => {
           dispatch({ type: 'ADD_CHANNEL', channel: res.data, headers: res.headers })
-          dispatch(setFlash('Channel Successfully Added', 'green'));
       }).catch( err => {
           dispatch({ type: 'SET_HEADERS', headers: err.headers });
-          dispatch(setFlash('Failed to Add Channels', 'red'));
-    });
+          dispatch(setFlash('Failed to Add Channel', 'red'));
+      });
   }
 }
 
@@ -37,6 +36,6 @@ export const deleteChannel = (channel) => {
       }).catch( err => {
         dispatch({ type: 'SET_HEADERS', headers: err.headers });
         dispatch(setFlash('Failed to Delete Channel', 'red'));
-    });
+      });
   }
 }
