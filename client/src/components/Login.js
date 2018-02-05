@@ -21,20 +21,21 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <Container as={Grid} centered style={{marginTop: 15}}>
-        <Form as={Grid.Column} computer={8} mobile={16} onSubmit={this.handleSubmit}>
-          <Segment raised>
-            <Header as='h1' textAlign='center' content='Login'/>
-            <Form.Field>
-              <label htmlFor='email'>Email</label>
-              <Form.Input
-                fluid
-                required
-                id='email'
-                value={email}
-                placeholder='Email'
-                onChange={this.handleChange}
-              />
+      <Form onSubmit={this.handleSubmit}>
+        <Container as={Grid} centered style={{marginTop: 15}}>
+          <Grid.Column computer={8} mobile={16}>
+            <Segment raised>
+              <Header as='h1' textAlign='center' content='Login'/>
+              <Form.Field>
+                <label htmlFor='email'>Email</label>
+                <Form.Input
+                  fluid
+                  required
+                  id='email'
+                  value={email}
+                  placeholder='Email'
+                  onChange={this.handleChange}
+                />
               </Form.Field>
               <Form.Field>
                 <label htmlFor='password'>Password</label>
@@ -52,9 +53,9 @@ class Login extends Component {
                 <Button primary type='submit'>Submit</Button>
               </Segment>
             </Segment>
-          </Form>
-        {/* </Grid> */}
-      </Container>
+          </Grid.Column>
+        </Container>
+      </Form>
     );
   }
 }

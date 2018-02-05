@@ -25,48 +25,50 @@ class Register extends Component {
     const { email, password, passwordConfirmation } = this.state;
 
     return (
-      <Container as={Grid} centered style={{marginTop: 15}}>
-        <Form as={Grid.Column} computer={8} mobile={16} onSubmit={this.handleSubmit}>
-          <Segment raised>
-            <Header as='h1' textAlign='center'>Register</Header>
-            <Form.Field>
-              <label htmlFor='email'>Email</label>
-              <Form.Input
-                id='email'
-                placeholder='Email'
-                required
-                value={email}
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label htmlFor='password'>Password</label>
-              <Form.Input
-                id='password'
-                placeholder='Password'
-                type='password'
-                required
-                value={password}
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label htmlFor='passwordConfirmation'>Confirm Password</label>
-              <Form.Input
-                id='passwordConfirmation'
-                placeholder='Password Confirmation'
-                type='password'
-                required
-                value={passwordConfirmation}
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Segment basic textAlign='center'>
-              <Button primary type='submit' content='Submit' />
+      <Form onSubmit={this.handleSubmit}>
+        <Container as={Grid} centered style={{marginTop: 15}}>
+          <Grid.Column computer={8} mobile={16}>
+            <Segment raised>
+              <Header as='h1' textAlign='center'>Register</Header>
+              <Form.Field>
+                <label htmlFor='email'>Email</label>
+                <Form.Input
+                  id='email'
+                  placeholder='Email'
+                  required
+                  value={email}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label htmlFor='password'>Password</label>
+                <Form.Input
+                  id='password'
+                  placeholder='Password'
+                  type='password'
+                  required
+                  value={password}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label htmlFor='passwordConfirmation'>Confirm Password</label>
+                <Form.Input
+                  id='passwordConfirmation'
+                  placeholder='Password Confirmation'
+                  type='password'
+                  required
+                  value={passwordConfirmation}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Segment basic textAlign='center'>
+                <Button primary type='submit' content='Submit' />
+              </Segment>
             </Segment>
-          </Segment>
-        </Form>
-      </Container>
+          </Grid.Column>
+        </Container>
+      </Form>
     );
   }
 }
