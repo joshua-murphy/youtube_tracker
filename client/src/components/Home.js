@@ -40,7 +40,7 @@ class Home extends Component {
     const channelArray = []
     channels.forEach( (channel, i) => {
       const video = channel.video || {}
-      channelArray.push( { channel, time: moment( video.time || new Date() ).format("DDD.HHMM") } ) 
+      channelArray.push( { channel, time: moment( video.time || new Date() ).format("YYYY0MM0DD0HH0mm") } ) 
     })
     channelArray.sort( (a, b) => { return b.time - a.time })
     return channelArray.map( (channel, i) => <Subscription key={i} time={this.state.time} channel={channel.channel} /> )
@@ -51,7 +51,6 @@ class Home extends Component {
     if( channels ) {
       return (
         <Container style={{paddingTop: 15}}>
-          {/* <br/> */}
           <Header as='h1' textAlign='center'>
             Channel Activity
             <Header.Subheader>
@@ -65,7 +64,7 @@ class Home extends Component {
       );
     } else {
       return (
-        <Dimmer active inverted style={{height: '100vh'}}>
+        <Dimmer active inverted style={{height: '100&'}}>
           <Loader>Loading channels...</Loader>
         </Dimmer> 
       )

@@ -90,7 +90,7 @@ class ChannelSearch extends React.Component {
                     </Card.Content>
                   </Card>
               : 
-                <Dimmer active inverted>
+                <Dimmer active inverted style={{height: '100%'}}>
                   <Loader>Loading channel...</Loader>
                 </Dimmer> 
               }

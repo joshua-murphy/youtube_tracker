@@ -27,6 +27,7 @@ class Subscriptions extends React.Component {
   timeDiff = (time = (new Date())) => {
     const video = this.timeObject(moment(time).format("DDD HH mm"))
     const now = this.timeObject(this.props.time)
+    debugger
     return this.formatTime({ 
       days: now.day - video.day, 
       minutes: ( (now.hour * 60) + now.minute ) - ( (video.hour * 60) + video.minute )
@@ -38,9 +39,9 @@ class Subscriptions extends React.Component {
     const hours = Math.floor(time.minutes/60)
     const minutes = time.minutes % 60
     return `${ 
-      days > 0 ? days === 1 ? `${days} day` : `${days} days` :
-      hours > 0 ? hours === 1 ? `${hours} hour` : `${hours} hours` :
-      minutes > 0 ? minutes === 1 ? `${minutes} minute` : `${minutes} minutes` : "Just now" 
+      days < 0 ? 'Long ago' : days >= 0 ? days === 1 ? `${days} day ago` : `${days} days ago` :
+      hours > 0 ? hours === 1 ? `${hours} hour ago` : `${hours} hours ago` :
+      minutes > 0 ? minutes === 1 ? `${minutes} minute ago` : `${minutes} minutes` : "Just now" 
     }`
   }
 
@@ -62,12 +63,12 @@ class Subscriptions extends React.Component {
               <Grid.Column only='mobile' mobile={1}>
                 <Icon link name="delete" onClick={this.deleteSub} />
               </Grid.Column>
-              <Grid.Column computer={2} mobile={16} className='thumbCol'>
+              <Grid.Column computer={2} mobile={16} verticalAlign="middle">
                 <Image bordered fluid src={video.thumbnail} href={`https://youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer" />
               </Grid.Column>
               <Grid.Column computer={7} mobile={16}>
                 <Header as="h4" content={ video.title || "No Video Found" } />
-                <i>{video.time && time && this.timeDiff(video.time)} ago</i><br/>
+                <i>{video.time && time && this.timeDiff(video.time)}</i><br/>
                 <i>
                   Views: { this.fixNumber(video.stats.viewCount) || 0 } | 
                   Likes: {this.fixNumber(video.stats.likeCount) || 0} | 
@@ -82,7 +83,7 @@ class Subscriptions extends React.Component {
       )
     } else { 
        return (
-          <Dimmer active inverted style={{height: '100vh'}}>
+          <Dimmer active inverted style={{height: '100%'}}>
             <Loader>Loading channels...</Loader>
           </Dimmer> 
        )
