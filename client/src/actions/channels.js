@@ -17,7 +17,6 @@ export const clearChannels = () => {
 }
 
 export const addChannel = (channel) => {
-  debugger
   return(dispatch) => {
     axios.post(`/api/channels`, channel )
       .then( res => {

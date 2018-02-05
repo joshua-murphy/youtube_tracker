@@ -2,13 +2,15 @@ import { APIKey } from '../components/APIKey';
 import axios from 'axios';
 import { setFlash } from './flash';
 
-const findVideo = (id, videos, dispatch) => {
+const findVideo = (id, channelId, videos, pageToken, dispatch) => {
   let n = 0
-  while (n <= 5) {
+  while (n < 5) {
     let video = videos[n]
     if( video.contentDetails ) {
       return setVideo(id, video.contentDetails.upload.videoId, dispatch)
     } else {
+      if( n === 4 )
+        dispatch(getVideo(id, channelId, pageToken))
       n++
     }
   }
@@ -44,10 +46,12 @@ export const getStats = (id, channelId) => {
   }
 }
 
-export const getVideo = (id, channelId) => {
+export const getVideo = (id, channelId, pageToken = null) => {
+  const key = APIKey
+  const pageString = pageToken ? `&pageToken=${pageToken}` : "" 
   return(dispatch) => {
-    axios.get(`https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=${channelId}&key=${APIKey}&fields=items(snippet(title,thumbnails/default/url),contentDetails(upload/videoId))`)
-      .then( res => findVideo(id, res.data.items, dispatch) )
+    axios.get(`https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=${channelId}&key=${key}${pageString}&fields=items(contentDetails/upload/videoId,snippet/title),nextPageToken`)
+      .then( res => findVideo(id, channelId, res.data.items, res.data.nextPageToken, dispatch) )
       .catch( err => {
         dispatch({ type: 'SET_HEADERS', headers: err.headers });
         dispatch(setFlash('Failed to Retrieve Video', 'red'));
