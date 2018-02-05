@@ -4,19 +4,37 @@ import Subscription from './Subscription';
 import Channel from './Channel';
 import { getChannels, clearChannels } from '../actions/channels';
 import { connect } from 'react-redux'
-import { Container, Header } from 'semantic-ui-react';
+import { Container, Dimmer, Header, Icon, Loader } from 'semantic-ui-react';
 import moment from 'moment'
 
 class Home extends Component {
 
+  state = { time: moment().format("DDD HH mm") }
+
   componentDidMount(){
     const { dispatch, user } = this.props
+    this.interval = setInterval( () => {
+      this.updateTime();
+    }, 60000)
     dispatch(getChannels(user.id))
   }
 
   componentWillUnmount() {
+    clearInterval(this.interval)    
     this.props.dispatch(clearChannels())
   }
+
+  componentDidUpdate() {
+    this.updateTime()
+  }
+
+  updateTime = () => {
+    let { time } = this.state
+    let now = moment().format("DDD HH mm")
+    if( now !== time ) {
+      this.setState({ time: now })
+    }
+  } 
 
   sortChannels = (channels) => {
     const channelArray = []
@@ -25,20 +43,33 @@ class Home extends Component {
       channelArray.push( { channel, time: moment( video.time || new Date() ).format("DDD.HHMM") } ) 
     })
     channelArray.sort( (a, b) => { return b.time - a.time })
-    return channelArray.map( (channel, i) => <Subscription key={i} channel={channel.channel} /> )
+    return channelArray.map( (channel, i) => <Subscription key={i} time={this.state.time} channel={channel.channel} /> )
   }
 
   render() {
     const { channels, dispatch } = this.props
-    return (
-      <Container>
-        <br/>
-        <Header as='h1' textAlign='center'>Channel Activity</Header>
-        { channels.map( channel => <Channel key={channel.id} channel={channel} dispatch={dispatch} /> ) }
-        { channels.length > 0 && this.sortChannels(channels) }
-        <br/><ChannelSearch />
-      </Container>
-    );
+    if( channels ) {
+      return (
+        <Container style={{paddingTop: 15}}>
+          {/* <br/> */}
+          <Header as='h1' textAlign='center'>
+            Channel Activity
+            <Header.Subheader>
+              { channels.length > 0 && <Icon link name='refresh' onClick={() => window.location.reload()} /> }
+            </Header.Subheader>
+          </Header>
+          { channels.map( channel => <Channel key={channel.id} channel={channel} dispatch={dispatch} /> ) }
+          { channels.length ? this.sortChannels(channels) : <Header content="No channels added, yet"/> }
+          <br/><ChannelSearch />
+        </Container>
+      );
+    } else {
+      return (
+        <Dimmer active inverted style={{height: '100vh'}}>
+          <Loader>Loading channels...</Loader>
+        </Dimmer> 
+      )
+    }
   }
 }
 

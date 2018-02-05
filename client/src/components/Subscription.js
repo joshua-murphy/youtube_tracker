@@ -6,30 +6,6 @@ import { Dimmer, Grid, Header, Icon, Image, Loader, Segment } from 'semantic-ui-
 
 class Subscriptions extends React.Component {
 
-  state = { time: moment().format("DDD HH mm") }
-
-  componentDidMount() {
-    this.interval = setInterval( () => {
-      this.updateTime();
-    }, 60000)  
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval)
-  }
-
-  componentDidUpdate() {
-    this.updateTime()
-  }
-
-  updateTime = () => {
-    let { time } = this.state
-    let now = moment().format("DDD HH mm")
-    if( now !== time ) {
-      this.setState({ time: now })
-    }
-  } 
-
   deleteSub = () => {
     const { dispatch, channel } = this.props
     if( window.confirm("Delete this subscription?"))
@@ -50,7 +26,7 @@ class Subscriptions extends React.Component {
 
   timeDiff = (time = (new Date())) => {
     const video = this.timeObject(moment(time).format("DDD HH mm"))
-    const now = this.timeObject(this.state.time)
+    const now = this.timeObject(this.props.time)
     return this.formatTime({ 
       days: now.day - video.day, 
       minutes: ( (now.hour * 60) + now.minute ) - ( (video.hour * 60) + video.minute )
@@ -69,37 +45,38 @@ class Subscriptions extends React.Component {
   }
 
   render() {
-    const { channel } = this.props
+    const { channel, time } = this.props
     if( channel.video ) {
       const { stats, video } = channel
       return (
         <Segment style={{width: "100%"}}>
           <Grid>
-            <Grid.Row>
-              <Grid.Column width={2}>
+              <Grid.Column computer={2} mobile={5}>
                 <Image circular centered src={channel.profile_image} />
               </Grid.Column>
-              <Grid.Column width={4}>
+              <Grid.Column computer={4} mobile={9}>
                 <Header content={channel.title} />
                 <i>Subscribers: {this.fixNumber(stats.subscriberCount) || "0"}</i><br/>
                 <i>Views: {this.fixNumber(stats.viewCount) || "0"}</i>
               </Grid.Column>
-              <Grid.Column width={2}>
-                <Image src={video.thumbnail} href={`https://youtube.com/watch?v=${video.id}`} target="_blank" />
+              <Grid.Column only='mobile' mobile={1}>
+                <Icon link name="delete" onClick={this.deleteSub} />
               </Grid.Column>
-              <Grid.Column width={7}>
+              <Grid.Column computer={2} mobile={16} className='thumbCol'>
+                <Image bordered fluid src={video.thumbnail} href={`https://youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer" />
+              </Grid.Column>
+              <Grid.Column computer={7} mobile={16}>
                 <Header as="h4" content={ video.title || "No Video Found" } />
-                <i>{video.time && this.state.time && this.timeDiff(video.time)} ago</i><br/>
+                <i>{video.time && time && this.timeDiff(video.time)} ago</i><br/>
                 <i>
                   Views: { this.fixNumber(video.stats.viewCount) || 0 } | 
                   Likes: {this.fixNumber(video.stats.likeCount) || 0} | 
                   Dislikes: {this.fixNumber(video.stats.dislikeCount) || 0}
                 </i>
               </Grid.Column>
-              <Grid.Column width={1}>
+              <Grid.Column only='computer' computer={1}>
                 <Icon link name="delete" style={{float: 'right'}} onClick={this.deleteSub} />
               </Grid.Column>
-            </Grid.Row>
           </Grid>
         </Segment>
       )

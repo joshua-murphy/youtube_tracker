@@ -1,6 +1,6 @@
 class Api::ChannelsController < ApplicationController
   
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   before_action :set_channel, only: [:show, :destroy]
 
   def index

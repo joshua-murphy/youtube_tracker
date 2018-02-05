@@ -15,14 +15,14 @@ const findVideo = (id, videos, dispatch) => {
 }
 
 const setVideo = (id, videoId, dispatch) => {
-  axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${APIKey}&fields=items(snippet(publishedAt,title,thumbnails/default/url),statistics)`)
+  axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${APIKey}&fields=items(snippet(publishedAt,title,thumbnails/medium/url),statistics)`)
     .then( res => { 
       const params = res.data.items[0]
       const video = {
         id: videoId,
         time: params.snippet.publishedAt,
         title: params.snippet.title,
-        thumbnail: params.snippet.thumbnails.default.url,
+        thumbnail: params.snippet.thumbnails.medium.url,
         stats: params.statistics
       }
       dispatch({ type: 'GET_VIDEO', id, video, headers: res.headers })
