@@ -9,7 +9,7 @@ const findVideo = (id, channelId, videos, pageToken, dispatch) => {
     if( video.contentDetails ) {
       return setVideo(id, video.contentDetails.upload.videoId, dispatch)
     } else {
-      if( n === 4 )
+      if( n === videos.length - 1 )
         dispatch(getVideo(id, channelId, pageToken))
       n++
     }
@@ -54,7 +54,6 @@ export const getVideo = (id, channelId, pageToken = null) => {
       .then( res => findVideo(id, channelId, res.data.items, res.data.nextPageToken, dispatch) )
       .catch( err => {
         dispatch({ type: 'SET_HEADERS', headers: err.headers });
-        dispatch(setFlash('Failed to Retrieve Video', 'red'));
       });
   }
 }

@@ -86,7 +86,7 @@ class ChannelSearch extends React.Component {
                       </Grid.Column>
                     </Card.Content>
                     <Card.Content extra>
-                      <Button floated="right" primary content="Add to List" onClick={() => this.props.dispatch(addChannel(this.state.channel))} />
+                      <Button floated='right' primary content='Add to List' onClick={() => this.props.dispatch(addChannel(this.state.channel))} />
                     </Card.Content>
                   </Card>
               : 
@@ -100,7 +100,7 @@ class ChannelSearch extends React.Component {
       )
     } else {
       return (
-        <Button basic content="Add Channel" onClick={() => this.setState({ showForm: true })} />
+        <Button basic content='Add Channel' onClick={() => this.setState({ showForm: true })} />
       )
     }
   }

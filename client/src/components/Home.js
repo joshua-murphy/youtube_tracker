@@ -9,7 +9,7 @@ import moment from 'moment'
 
 class Home extends Component {
 
-  state = { time: moment().format("DDD HH mm") }
+  state = { time: moment().format('DDD HH mm'), loaded: false }
 
   componentDidMount(){
     const { dispatch, user } = this.props
@@ -30,7 +30,7 @@ class Home extends Component {
 
   updateTime = () => {
     let { time } = this.state
-    let now = moment().format("DDD HH mm")
+    let now = moment().format('DDD HH mm')
     if( now !== time ) {
       this.setState({ time: now })
     }
@@ -40,10 +40,11 @@ class Home extends Component {
     const channelArray = []
     channels.forEach( (channel, i) => {
       const video = channel.video || {}
-      channelArray.push( { channel, time: moment( video.time || new Date() ).format("YYYY0MM0DD0HH0mm") } ) 
+      channelArray.push( { channel, time: moment( video.time || '0000-01-01' ).format('YYYY0MM0DD0HH0mm') } ) 
     })
-    channelArray.sort( (a, b) => { return b.time - a.time })
-    return channelArray.map( (channel, i) => <Subscription key={i} time={this.state.time} channel={channel.channel} /> )
+    return ( channelArray.sort( (a, b) => { return b.time - a.time })
+      .map( (channel, i) => <Subscription key={i} time={this.state.time} channel={channel.channel} /> )
+    )
   }
 
   render() {
@@ -58,7 +59,7 @@ class Home extends Component {
             </Header.Subheader>
           </Header>
           { channels.map( channel => <Channel key={channel.id} channel={channel} dispatch={dispatch} /> ) }
-          { channels.length ? this.sortChannels(channels) : <Header content="No channels added, yet"/> }
+          { channels.length ? this.sortChannels(channels) : <Header content='No channels added, yet'/> }
           <br/><ChannelSearch />
         </Container>
       );
