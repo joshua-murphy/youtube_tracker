@@ -3,7 +3,7 @@ import { APIKey } from './APIKey';
 import { connect } from 'react-redux'
 import { addChannel } from '../actions/channels';
 import axios from 'axios';
-import { Button, Card, Dimmer, Form, Grid, Image, Loader, Segment } from 'semantic-ui-react';
+import { Button, Card, Dimmer, Form, Grid, Header, Image, Loader, Segment } from 'semantic-ui-react';
 
 class ChannelSearch extends React.Component {
 
@@ -35,74 +35,73 @@ class ChannelSearch extends React.Component {
     this.setState({ [id]: value })
   }
 
+  addClick = () => {
+    this.props.dispatch(addChannel(this.state.channel))
+    this.setState({ channel: {} })
+  }
+
   render() {
     const { channel, description, search, searchType, loaded, showForm } = this.state
-    if( showForm ) {
-      return (
-        <Grid>
-          <Grid.Row>
-            <Grid.Column computer={8} mobile={16}>
-              <Form as={Segment} onSubmit={this.handleSearch}>
-                <Form.Group inline>
-                  {/* <Button style={{marginRight: '1em'}} basic icon="cancel" onClick={() => this.setState({ showForm: false })} /> */}
-                  <Form.Radio 
-                    label='Search by username' 
-                    checked={searchType === 'forUsername'} 
-                    onClick={() => this.setState({searchType: 'forUsername'})} 
-                  />
-                  <Form.Radio 
-                    label='Search by channel id' 
-                    checked={searchType === 'id'} 
-                    onClick={() => this.setState({searchType: 'id'})} 
-                  />
-                </Form.Group> 
-                <Form.Input
-                  fluid
-                  placeholder='Search'
-                  value={search}
-                  onChange={this.handleChange}
-                  id='search'
+    return (
+      <Grid>
+        <Grid.Row>
+          <Grid.Column computer={8} mobile={16}>
+            <Form as={Segment} onSubmit={this.handleSearch}>
+              <Header as="h1" content="Add a Channel" />
+              <Form.Group inline>
+                <Form.Radio 
+                  label='Search by username' 
+                  checked={searchType === 'forUsername'} 
+                  onClick={() => this.setState({searchType: 'forUsername'})} 
                 />
-                <Form.Button
-                  basic
-                  floated='right'
-                  icon='search'
-                  onClick={this.handleSearch}
+                <Form.Radio 
+                  label='Search by channel id' 
+                  checked={searchType === 'id'} 
+                  onClick={() => this.setState({searchType: 'id'})} 
                 />
-                <br/><br/>
-              </Form>
-            </Grid.Column>
-            <Grid.Column computer={8} mobile={16}>
-              { loaded ?
-                channel.title &&
-                  <Card fluid>
-                    <Card.Content>
-                      <Grid.Column width={6}>
-                        <Image rounded floated='left' size='tiny' src={channel.profile_image} />
-                      </Grid.Column>
-                      <Grid.Column width={12}>
-                        <Card.Header style={{fontSize: 24, marginTop: 5, marginBottom: 10}} content={ channel.title } />
-                        <Card.Description content={ description } />
-                      </Grid.Column>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <Button floated='right' primary content='Add to List' onClick={() => this.props.dispatch(addChannel(this.state.channel))} />
-                    </Card.Content>
-                  </Card>
-              : 
-                <Dimmer active inverted style={{height: '100%'}}>
-                  <Loader>Loading channel...</Loader>
-                </Dimmer> 
-              }
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      )
-    } else {
-      return (
-        <Button basic content='Add Channel' onClick={() => this.setState({ showForm: true })} />
-      )
-    }
+              </Form.Group> 
+              <Form.Input
+                fluid
+                placeholder='Search'
+                value={search}
+                onChange={this.handleChange}
+                id='search'
+              />
+              <Form.Button
+                basic
+                floated='right'
+                icon='search'
+                onClick={this.handleSearch}
+              />
+              <br/><br/>
+            </Form>
+          </Grid.Column>
+          <Grid.Column computer={8} mobile={16}>
+            { loaded ?
+              channel.title &&
+                <Card fluid>
+                  <Card.Content>
+                    <Grid.Column width={6}>
+                      <Image rounded floated='left' size='tiny' src={channel.profile_image} />
+                    </Grid.Column>
+                    <Grid.Column width={12}>
+                      <Card.Header style={{fontSize: 24, marginTop: 5, marginBottom: 10}} content={ channel.title } />
+                      <Card.Description content={ description } />
+                    </Grid.Column>
+                  </Card.Content>
+                  <Card.Content extra>
+                    <Button floated='right' primary content='Add to List' onClick={this.addClick} />
+                  </Card.Content>
+                </Card>
+            : 
+              <Dimmer active inverted style={{height: '100%'}}>
+                <Loader>Loading channel...</Loader>
+              </Dimmer> 
+            }
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    )
   }
 
 }

@@ -49,27 +49,19 @@ class Home extends Component {
 
   render() {
     const { channels, dispatch } = this.props
-    if( channels ) {
-      return (
-        <Container style={{paddingTop: 15}}>
-          <Header as='h1' textAlign='center'>
-            Channel Activity
-            <Header.Subheader>
-              { channels.length > 0 && <Icon link name='refresh' onClick={() => window.location.reload()} /> }
-            </Header.Subheader>
-          </Header>
-          { channels.map( channel => <Channel key={channel.id} channel={channel} dispatch={dispatch} /> ) }
-          { channels.length ? this.sortChannels(channels) : <Header content='No channels added, yet'/> }
-          <br/><ChannelSearch />
-        </Container>
-      );
-    } else {
-      return (
-        <Dimmer active inverted style={{height: '100&'}}>
-          <Loader>Loading channels...</Loader>
-        </Dimmer> 
-      )
-    }
+    return (
+      <Container style={{paddingTop: 15}}>
+        <Header as='h1' textAlign='center'>
+          Channel Activity
+          <Header.Subheader>
+            { channels.length > 0 && <Icon link name='refresh' onClick={() => window.location.reload()} /> }
+          </Header.Subheader>
+        </Header>
+        { channels.map( channel => <Channel key={channel.id} channel={channel} dispatch={dispatch} /> ) }
+        { channels.length ? this.sortChannels(channels) : <Header content='No channels added, yet'/> }
+        <br/><ChannelSearch />
+      </Container>
+    );
   }
 }
 

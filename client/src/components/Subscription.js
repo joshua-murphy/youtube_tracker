@@ -3,7 +3,7 @@ import StatsPopup from './StatsPopup'
 import { deleteChannel } from '../actions/channels'
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Dimmer, Grid, Header, Icon, Image, Loader, Segment } from 'semantic-ui-react';
+import { Dimmer, Grid, Header, Icon, Image, Loader, Popup, Segment } from 'semantic-ui-react';
 
 class Subscriptions extends React.Component {
 
@@ -79,7 +79,14 @@ class Subscriptions extends React.Component {
               </div>
             </Grid.Column>
             <Grid.Column only='computer' computer={1}>
-              <Icon link name='delete' style={{float: 'right'}} onClick={this.deleteSub} />
+              <Popup basic content="Delete Subscription" trigger={
+                <Icon 
+                  link 
+                  name='delete' 
+                  style={{float: "right"}} 
+                  onClick={this.deleteSub}/> 
+                }
+              />
             </Grid.Column>
           </Grid>
         </Segment>
