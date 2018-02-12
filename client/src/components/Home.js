@@ -4,18 +4,18 @@ import Subscription from './Subscription';
 import Channel from './Channel';
 import { getChannels, clearChannels } from '../actions/channels';
 import { connect } from 'react-redux'
-import { Container, Dimmer, Header, Icon, Loader } from 'semantic-ui-react';
+import { Container, Header, Icon } from 'semantic-ui-react';
 import moment from 'moment'
 
 class Home extends Component {
 
   state = { time: moment().format('DDD HH mm'), loaded: false }
 
-  componentDidMount(){
+  componentDidMount() {
     const { dispatch, user } = this.props
     this.interval = setInterval( () => {
       this.updateTime();
-    }, 60000)
+    }, 60000 )
     dispatch(getChannels(user.id))
   }
 

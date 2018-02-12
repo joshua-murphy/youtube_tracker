@@ -31,17 +31,33 @@ class ChannelSearch extends React.Component {
     }
   }
 
-  handleChange = (e, { id, value }) => {
-    this.setState({ [id]: value })
+  handleChange = (e, { value }) => {
+    this.setState({ search: value })
+  }
+
+  checkSubmit = (e) => {
+    e.keyCode === 13 && this.handleSearch()
+  }
+
+  scrollStep = () => {
+    if( window.pageYOffset === 0 ) {
+      clearInterval(this.scrollInterval);
+    }
+    window.scroll(0, window.pageYOffset - 50);
+  }
+
+  scrollToTop = () => {
+    this.scrollInterval = setInterval(this.scrollStep, 20);
   }
 
   addClick = () => {
+    this.scrollToTop()
     this.props.dispatch(addChannel(this.state.channel))
     this.setState({ channel: {} })
   }
 
   render() {
-    const { channel, description, search, searchType, loaded, showForm } = this.state
+    const { channel, description, search, searchType, loaded } = this.state
     return (
       <Grid>
         <Grid.Row>
@@ -65,7 +81,8 @@ class ChannelSearch extends React.Component {
                 placeholder='Search'
                 value={search}
                 onChange={this.handleChange}
-                id='search'
+                onSubmit={this.handleSearch}
+                onKeyDown={this.checkSubmit}
               />
               <Form.Button
                 basic
