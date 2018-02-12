@@ -33,7 +33,7 @@ class NavBar extends Component {
   render() {
     return (
       <div>
-        <Menu pointing secondary>
+        <Menu pointing secondary style={{ backgroundColor: 'white' }} >
           <Link to='/'>
             <Menu.Item name='home' />
           </Link>
