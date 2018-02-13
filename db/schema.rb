@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129201710) do
+ActiveRecord::Schema.define(version: 20180212095355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,5 +54,20 @@ ActiveRecord::Schema.define(version: 20180129201710) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  create_table "videos", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "published", null: false
+    t.string "yt_video_id", null: false
+    t.string "thumbnail_url", null: false
+    t.integer "views", default: 0
+    t.integer "likes", default: 0
+    t.integer "dislikes", default: 0
+    t.bigint "channel_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id"], name: "index_videos_on_channel_id"
+  end
+
   add_foreign_key "channels", "users"
+  add_foreign_key "videos", "channels"
 end

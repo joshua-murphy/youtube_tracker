@@ -47,6 +47,7 @@ class Subscriptions extends React.Component {
 
   render() {
     const { channel, time } = this.props
+    //TODO: Cleanup this mess
     if( channel.stats && channel.video ) {
       const { stats, video } = channel
       return (
@@ -64,15 +65,15 @@ class Subscriptions extends React.Component {
               <Icon link name='delete' onClick={this.deleteSub} />
             </Grid.Column>
             <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
-              <Image bordered fluid src={video.thumbnail} href={`https://youtube.com/watch?v=${video.id}`} target='_blank' rel='noopener noreferrer' />
+              <Image bordered fluid src={video.thumbnail_url} href={`https://youtube.com/watch?v=${video.id}`} target='_blank' rel='noopener noreferrer' />
             </Grid.Column>
             <Grid.Column computer={7} mobile={16}>
               <Header as='h4' content={ video.title } />
-              <i>{video.time && time && this.timeDiff(video.time)}</i><br/>
+              <i>{video.published && time && this.timeDiff(video.published)}</i><br/>
               <i>
-                Views: { this.fixNumber(video.stats.viewCount) } | 
-                Likes: {this.fixNumber(video.stats.likeCount) } | 
-                Dislikes: {this.fixNumber(video.stats.dislikeCount) }
+                Views: { this.fixNumber(video.views) } | 
+                Likes: {this.fixNumber(video.likes) } | 
+                Dislikes: {this.fixNumber(video.dislikes) }
               </i>
               <div style={{float: 'right'}}>
                 <StatsPopup channel={channel} /> 
@@ -108,16 +109,33 @@ class Subscriptions extends React.Component {
               <Icon link name='delete' onClick={this.deleteSub} />
             </Grid.Column>
             <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
-              <Image bordered fluid src='' />
             </Grid.Column>
             <Grid.Column computer={7} mobile={16}>
               <Header as='h4' content={ 'Video Not Found' } />
-              <br/>
-              <i>
-                Views: 0 | 
-                Likes: 0 | 
-                Dislikes: 0
-              </i>
+            </Grid.Column>
+            <Grid.Column only='computer' computer={1}>
+              <Icon link name='delete' style={{float: 'right'}} onClick={this.deleteSub} />
+            </Grid.Column>
+          </Grid>
+        </Segment>
+      )
+    } else if( channel ) { 
+      return (
+        <Segment style={{width: '100%'}}>
+          <Grid>
+            <Grid.Column computer={2} mobile={5}>
+              <Image circular centered src={channel.profile_image} href={`https://youtube.com/channel/${channel.yt_channel_id}`} target='_blank' rel='noopener noreferrer' />
+            </Grid.Column>
+            <Grid.Column computer={4} mobile={9}>
+              <Header content={channel.title} />
+            </Grid.Column>
+            <Grid.Column only='mobile' mobile={1}>
+              <Icon link name='delete' onClick={this.deleteSub} />
+            </Grid.Column>
+            <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
+            </Grid.Column>
+            <Grid.Column computer={7} mobile={16}>
+              <Header as='h4' content={ 'Video Not Found' } />
             </Grid.Column>
             <Grid.Column only='computer' computer={1}>
               <Icon link name='delete' style={{float: 'right'}} onClick={this.deleteSub} />

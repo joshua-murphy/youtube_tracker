@@ -1,5 +1,6 @@
 import React from 'react';
-import { getStats, getVideo } from '../actions/channel';
+import { getStats } from '../actions/channels';
+import { getVideo } from '../actions/video';
 
 class Channel extends React.Component {
 

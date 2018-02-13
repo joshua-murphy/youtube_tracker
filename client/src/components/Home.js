@@ -40,7 +40,7 @@ class Home extends Component {
     const channelArray = []
     channels.forEach( (channel, i) => {
       const video = channel.video || {}
-      channelArray.push( { channel, time: moment( video.time || '0000-01-01' ).format('YYYY0MM0DD0HH0mm') } ) 
+      channelArray.push( { channel, time: moment( video.published || '0000-01-01' ).format('YYYY0MM0DD0HH0mm') } ) 
     })
     return ( channelArray.sort( (a, b) => { return b.time - a.time })
       .map( (channel, i) => <Subscription key={i} time={this.state.time} channel={channel.channel} /> )

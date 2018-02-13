@@ -1,5 +1,5 @@
-import { APIKey } from '../components/APIKey';
 import axios from 'axios';
+import { APIKey } from '../components/APIKey';
 import { setFlash } from './flash';
 
 const findVideo = (id, channelId, videos, pageToken, dispatch) => {
@@ -7,7 +7,7 @@ const findVideo = (id, channelId, videos, pageToken, dispatch) => {
   while (n < 5) {
     let video = videos[n]
     if( video.contentDetails ) {
-      return setVideo(id, video.contentDetails.upload.videoId, dispatch)
+      return setVideo(id, video.contentDetails.upload.videoId, channelId, dispatch)
     } else {
       if( n === videos.length - 1 )
         dispatch(getVideo(id, channelId, pageToken))
@@ -16,18 +16,21 @@ const findVideo = (id, channelId, videos, pageToken, dispatch) => {
   }
 }
 
-const setVideo = (id, videoId, dispatch) => {
+const setVideo = (id, videoId, channelId, dispatch) => {
   axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${APIKey}&fields=items(snippet(publishedAt,title,thumbnails/medium/url),statistics)`)
-    .then( res => { 
+    .then( res => {
       const params = res.data.items[0]
-      const video = {
-        id: videoId,
-        time: params.snippet.publishedAt,
+      let video = {
+        yt_video_id: videoId,
+        published: params.snippet.publishedAt,
         title: params.snippet.title,
-        thumbnail: params.snippet.thumbnails.medium.url,
-        stats: params.statistics
+        thumbnail_url: params.snippet.thumbnails.medium.url,
+        views: params.statistics.viewCount,
+        likes: params.statistics.likeCount,
+        dislikes: params.statistics.dislikeCount,
+        channel_id: id
       }
-      dispatch({ type: 'GET_VIDEO', id, video, headers: res.headers })
+      dispatch(addVideo(video))
     })
     .catch( err => {
       dispatch({ type: 'SET_HEADERS', headers: err.headers });
@@ -35,13 +38,13 @@ const setVideo = (id, videoId, dispatch) => {
     });
 }
 
-export const getStats = (id, channelId) => {
+const addVideo = (video) => {
   return(dispatch) => {
-    axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${APIKey}&fields=items/statistics(viewCount,subscriberCount)`)
-      .then( res => dispatch({ type: 'GET_STATS', id, stats: res.data.items[0].statistics, headers: res.headers }))
+    axios.post(`/api/videos`, video )
+      .then( res => dispatch({ type: 'GET_VIDEO', video, id: video.channel_id, headers: res.headers }) )
       .catch( err => {
         dispatch({ type: 'SET_HEADERS', headers: err.headers });
-        dispatch(setFlash('Failed to Retrieve Channel Stats', 'red'));
+        dispatch(setFlash('Failed to Add Video', 'red'));
       });
   }
 }
