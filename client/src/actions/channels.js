@@ -37,7 +37,7 @@ export const addChannel = (channel) => {
           dispatch({ type: 'ADD_CHANNEL', channel: res.data, headers: res.headers })
       }).catch( err => {
           dispatch({ type: 'SET_HEADERS', headers: err.headers });
-          dispatch(setFlash('Failed to Add Channel', 'red'));
+          dispatch(setFlash('Failed to Add Channel - You May Need to Login Again', 'red'));
       });
   }
 }

@@ -47,9 +47,8 @@ class Subscriptions extends React.Component {
 
   render() {
     const { channel, time } = this.props
-    //TODO: Cleanup this mess
-    if( channel.stats && channel.video ) {
-      const { stats, video } = channel
+    if( channel.video ) {
+      const { video } = channel
       return (
         <Segment style={{width: '100%'}}>
           <Grid>
@@ -58,14 +57,18 @@ class Subscriptions extends React.Component {
             </Grid.Column>
             <Grid.Column computer={4} mobile={9}>
               <Header content={channel.title} />
-              <i>Subscribers: {this.fixNumber(stats.subscriberCount) }</i><br/>
-              <i>Views: {this.fixNumber(stats.viewCount) }</i>
+              { channel.stats &&
+                <div>
+                  <i>Subscribers: {this.fixNumber(channel.stats.subscriberCount) }</i><br/>
+                  <i>Views: {this.fixNumber(channel.stats.viewCount) }</i>
+                </div>
+              }
             </Grid.Column>
             <Grid.Column only='mobile' mobile={1}>
               <Icon link name='delete' onClick={this.deleteSub} />
             </Grid.Column>
             <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
-              <Image bordered fluid src={video.thumbnail_url} href={`https://youtube.com/watch?v=${video.id}`} target='_blank' rel='noopener noreferrer' />
+              <Image bordered fluid src={video.thumbnail_url} href={`https://youtube.com/watch?v=${video.yt_video_id}`} target='_blank' rel='noopener noreferrer' />
             </Grid.Column>
             <Grid.Column computer={7} mobile={16}>
               <Header as='h4' content={ video.title } />
@@ -76,7 +79,7 @@ class Subscriptions extends React.Component {
                 Dislikes: {this.fixNumber(video.dislikes) }
               </i>
               <div style={{float: 'right'}}>
-                <StatsPopup channel={channel} /> 
+                { channel.stats && <StatsPopup channel={channel} /> }
               </div>
             </Grid.Column>
             <Grid.Column only='computer' computer={1}>
@@ -92,61 +95,10 @@ class Subscriptions extends React.Component {
           </Grid>
         </Segment>
       )
-    } else if( channel.stats ) { 
-      const stats = channel.stats ? channel.stats : {}
-      return (
-        <Segment style={{width: '100%'}}>
-          <Grid>
-            <Grid.Column computer={2} mobile={5}>
-              <Image circular centered src={channel.profile_image} href={`https://youtube.com/channel/${channel.yt_channel_id}`} target='_blank' rel='noopener noreferrer' />
-            </Grid.Column>
-            <Grid.Column computer={4} mobile={9}>
-              <Header content={channel.title} />
-              <i>Subscribers: {this.fixNumber(stats.subscriberCount) || '0'}</i><br/>
-              <i>Views: {this.fixNumber(stats.viewCount) || '0'}</i>
-            </Grid.Column>
-            <Grid.Column only='mobile' mobile={1}>
-              <Icon link name='delete' onClick={this.deleteSub} />
-            </Grid.Column>
-            <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
-            </Grid.Column>
-            <Grid.Column computer={7} mobile={16}>
-              <Header as='h4' content={ 'Video Not Found' } />
-            </Grid.Column>
-            <Grid.Column only='computer' computer={1}>
-              <Icon link name='delete' style={{float: 'right'}} onClick={this.deleteSub} />
-            </Grid.Column>
-          </Grid>
-        </Segment>
-      )
-    } else if( channel ) { 
-      return (
-        <Segment style={{width: '100%'}}>
-          <Grid>
-            <Grid.Column computer={2} mobile={5}>
-              <Image circular centered src={channel.profile_image} href={`https://youtube.com/channel/${channel.yt_channel_id}`} target='_blank' rel='noopener noreferrer' />
-            </Grid.Column>
-            <Grid.Column computer={4} mobile={9}>
-              <Header content={channel.title} />
-            </Grid.Column>
-            <Grid.Column only='mobile' mobile={1}>
-              <Icon link name='delete' onClick={this.deleteSub} />
-            </Grid.Column>
-            <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
-            </Grid.Column>
-            <Grid.Column computer={7} mobile={16}>
-              <Header as='h4' content={ 'Video Not Found' } />
-            </Grid.Column>
-            <Grid.Column only='computer' computer={1}>
-              <Icon link name='delete' style={{float: 'right'}} onClick={this.deleteSub} />
-            </Grid.Column>
-          </Grid>
-        </Segment>
-      )
     } else { 
        return (
           <Dimmer active inverted style={{height: '100%'}}>
-            <Loader>Loading channels...</Loader>
+            <Loader>Loading...</Loader>
           </Dimmer> 
        )
     }
