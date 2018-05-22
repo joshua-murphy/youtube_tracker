@@ -56,15 +56,27 @@ class ChannelSearch extends React.Component {
     this.setState({ channel: {} })
   }
 
+  styles = (type) => {
+    const { user: { dark_theme } } = this.props    
+    switch(type) {
+      case 'text':
+        return dark_theme ? { color: 'rgb(215, 215, 215)' } : { color: 'rgb(33, 33, 33)' };
+      case 'segment':
+        return dark_theme ? { backgroundColor: '#5a5a5a' } : {}
+      default: break;
+    }
+  }
+
   render() {
     const { channel, description, search, searchType, loaded } = this.state
+    const { addClick, handleSearch, handleChange, checkSubmit, styles } = this;
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column computer={8} mobile={16}>
-            <Form as={Segment} onSubmit={this.handleSearch}>
-              <Header as="h1" content="Add a Channel" />
-              <Form.Group inline>
+            <Form as={Segment} onSubmit={handleSearch} style={styles('segment')}>
+              <Header as="h1" content="Add a Channel" style={styles('header')} />
+              <Form.Group id="radio-buttons" inline>
                 <Form.Radio 
                   label='Search by username' 
                   checked={searchType === 'forUsername'} 
@@ -80,15 +92,16 @@ class ChannelSearch extends React.Component {
                 fluid
                 placeholder='Search'
                 value={search}
-                onChange={this.handleChange}
-                onSubmit={this.handleSearch}
-                onKeyDown={this.checkSubmit}
+                onChange={handleChange}
+                onSubmit={handleSearch}
+                onKeyDown={checkSubmit}
+                id='search-input'
               />
               <Form.Button
                 basic
                 floated='right'
                 icon='search'
-                onClick={this.handleSearch}
+                onClick={handleSearch}
               />
               <br/><br/>
             </Form>
@@ -96,8 +109,8 @@ class ChannelSearch extends React.Component {
           <Grid.Column computer={8} mobile={16}>
             { loaded ?
               channel.title &&
-                <Card fluid>
-                  <Card.Content>
+                <Card as={Segment} fluid style={styles('segment')}>
+                  <Card.Content style={styles('text')}>
                     <Grid.Column width={6}>
                       <Image rounded floated='left' size='tiny' src={channel.profile_image} />
                     </Grid.Column>
@@ -107,11 +120,11 @@ class ChannelSearch extends React.Component {
                     </Grid.Column>
                   </Card.Content>
                   <Card.Content extra>
-                    <Button floated='right' primary content='Add to List' onClick={this.addClick} />
+                    <Button floated='right' primary content='Add to List' onClick={addClick} />
                   </Card.Content>
                 </Card>
             : 
-              <Dimmer active inverted style={{height: '100%'}}>
+              <Dimmer active inverted={!this.props.user.dark_theme} style={{height: '100%'}}>
                 <Loader>Loading channel...</Loader>
               </Dimmer> 
             }

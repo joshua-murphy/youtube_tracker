@@ -1,17 +1,9 @@
 import React from 'react';
 import StatsPopup from './StatsPopup'
-import { deleteChannel } from '../actions/channels'
-import { connect } from 'react-redux';
 import moment from 'moment';
 import { Dimmer, Grid, Header, Icon, Image, Loader, Popup, Segment } from 'semantic-ui-react';
 
 class Subscriptions extends React.Component {
-
-  deleteSub = () => {
-    const { dispatch, channel } = this.props
-    if( window.confirm("Delete this subscription?"))
-      dispatch(deleteChannel(channel))
-  }
 
   fixNumber = (num = 0) => {
     return parseInt(num, 10).toLocaleString()
@@ -45,18 +37,32 @@ class Subscriptions extends React.Component {
     }`
   }
 
+  styles = (type) => {
+    const { user: { dark_theme } } = this.props    
+    switch(type) {
+      case 'text':
+        return dark_theme ? { color: 'rgb(199, 199, 199)' } : { color: 'rgb(33, 33, 33)' };
+      case 'header':
+        return dark_theme ? { color: 'rgb(240, 240, 240)' } : { color: 'rgb(33, 33, 33)' };
+      case 'segment':
+        return dark_theme ? { backgroundColor: '#5a5a5a' } : {}
+      default: break;
+    }
+  }
+
   render() {
-    const { channel, time } = this.props
+    const { channel, time } = this.props;
+    const { styles } = this;
     if( channel.video ) {
       const { video } = channel
       return (
-        <Segment style={{width: '100%'}}>
-          <Grid>
+        <Segment style={styles('segment')}>
+          <Grid style={styles('text')}>
             <Grid.Column computer={2} mobile={5}>
               <Image circular centered src={channel.profile_image} href={`https://youtube.com/channel/${channel.yt_channel_id}`} target="_blank" rel="noopener noreferrer" />
             </Grid.Column>
             <Grid.Column computer={4} mobile={9}>
-              <Header content={channel.title} />
+              <Header content={channel.title} style={styles('header')} />
               { channel.stats &&
                 <div>
                   <i>Subscribers: {this.fixNumber(channel.stats.subscriberCount) }</i><br/>
@@ -65,13 +71,13 @@ class Subscriptions extends React.Component {
               }
             </Grid.Column>
             <Grid.Column only='mobile' mobile={1}>
-              <Icon link name='delete' onClick={this.deleteSub} />
+              <Icon link name='delete' onClick={() => this.props.deleteSub(this.props.channel)} />
             </Grid.Column>
             <Grid.Column computer={2} mobile={16} verticalAlign='middle'>
               <Image bordered fluid src={video.thumbnail_url} href={`https://youtube.com/watch?v=${video.yt_video_id}`} target='_blank' rel='noopener noreferrer' />
             </Grid.Column>
             <Grid.Column computer={7} mobile={16}>
-              <Header as='h4' content={ video.title } />
+              <Header as='h4' content={ video.title } style={styles('header')} />
               <i>{video.published && time && this.timeDiff(video.published)}</i><br/>
               <i>
                 Views: { this.fixNumber(video.views) } | 
@@ -88,7 +94,7 @@ class Subscriptions extends React.Component {
                   link 
                   name='delete' 
                   style={{float: "right"}} 
-                  onClick={this.deleteSub}/> 
+                  onClick={() => this.props.deleteSub(this.props.channel)}/> 
                 }
               />
             </Grid.Column>
@@ -97,7 +103,7 @@ class Subscriptions extends React.Component {
       )
     } else { 
        return (
-          <Dimmer active inverted style={{height: '100%'}}>
+          <Dimmer active inverted={!this.props.user.dark_theme} style={{height: '100%'}}>
             <Loader>Loading...</Loader>
           </Dimmer> 
        )
@@ -105,4 +111,4 @@ class Subscriptions extends React.Component {
   }
 }
 
-export default connect()(Subscriptions);
+export default Subscriptions;

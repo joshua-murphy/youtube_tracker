@@ -4,6 +4,8 @@ const user = (state = {}, action) => {
       return action.user;
     case 'LOGOUT':
       return {};
+    case 'CHANGE_THEME':
+      return { ...state, dark_theme: action.theme }
     default:
       return state;
   }

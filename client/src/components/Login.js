@@ -21,7 +21,7 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit} style={{minHeight: '91.5vh'}}>
         <Container as={Grid} centered style={{marginTop: 15}}>
           <Grid.Column computer={8} mobile={16}>
             <Segment raised>

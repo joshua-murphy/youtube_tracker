@@ -3,6 +3,7 @@ import { Menu } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { handleLogout } from '../actions/auth';
+import { changeTheme } from '../actions/user';
 
 class NavBar extends Component {
   rightNavs = () => {
@@ -11,6 +12,10 @@ class NavBar extends Component {
     if (user.id) {
       return (
         <Menu.Menu position='right'>
+          <Menu.Item
+            name={user.dark_theme ? 'Light Theme' : 'Dark Theme'}
+            onClick={() => dispatch(changeTheme(user.id))}
+          />
           <Menu.Item
             name='Logout'
             onClick={() => dispatch(handleLogout(history))}
@@ -31,9 +36,10 @@ class NavBar extends Component {
   }
 
   render() {
+    const { user: { dark_theme } } = this.props;
     return (
       <div>
-        <Menu pointing secondary style={{ backgroundColor: 'white' }} >
+        <Menu pointing secondary style={ !dark_theme ? { backgroundColor: 'white' } : { backgroundColor: 'gray' }}>
           <Link to='/'>
             <Menu.Item name='home' />
           </Link>
