@@ -28,7 +28,7 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'google-api-client'
 
-gem 'omniauth', '1.8.1'
+gem 'omniauth', '1.9.2'
 gem 'devise', '4.3.0'
 gem 'devise_token_auth', '0.1.42'
 
